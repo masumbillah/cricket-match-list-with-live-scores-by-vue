@@ -1,0 +1,322 @@
+* {
+    box-sizing: border-box;
+    font-family: 'Barlow Semi Condensed', sans-serif;
+  }
+
+body {
+  background: #eee;
+  position: relative;
+}
+
+.box-container {
+  width: 90%;
+  margin: 70px auto 0 auto;
+  position: relative;
+}
+
+.tab-box {
+   position: absolute;
+    top: -48px;
+    left: auto;
+    display: inline-flex;
+    margin-left: 60px;
+}
+
+.tab-box .tab-item {
+  padding: 15px 20px;
+    border-radius: 10px 10px 0 0;
+    letter-spacing: 0.5px;
+    color: #444;
+    cursor: pointer;
+}
+
+.tab-box .tab-item:not(.active):hover {  
+  opacity: 0.9;
+  transition: 200ms;
+}
+
+.tab-box .tab-item.active {
+  z-index: 1;
+    background: #fff;
+    color: #3c3c3c;
+}
+
+.tab-box .tab-item {
+  margin-left: -15px;
+    background: #1b6442;
+    color: #fff;
+    padding-left: 35px;
+}
+
+
+  /*Start match row container styles*/
+.match-row-container {
+  background: #fff;
+  border-bottom: 1px solid #ccc;
+  padding: 0;
+  border-radius: 10px;
+  margin-bottom: 30px;
+}
+
+.match-row-container li {
+  list-style: none;
+  border-bottom: 1px solid #ddd;
+}
+
+.match-row-container li:hover {
+  background-color: #eeeeee47;
+}
+
+.match-row-container li a {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    list-style: none;
+    text-decoration: none;
+    color: inherit;
+    padding: 35px 20px 30px 35px;
+}
+
+
+.match-row-container li a .item-col{
+  flex-basis: 20%;
+  align-self: center;
+}
+
+.match-row-container li a .item-col.team-name-box{
+  flex-basis: 20%;
+    text-align: center;
+    font-size: 1.25em;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #31404b;
+    margin: 0 0 .75em;
+    letter-spacing: 2px;
+}
+
+.item-col.team-name-box .live-score{
+  font-size: 0.95em;
+}
+
+.team-name-box .team-name {
+  margin-bottom: 10px;
+}
+
+.match-row-container li a .item-col.verses{
+    flex-basis: 8%;
+    font-size: 1.85em;
+    font-weight: bolder;
+    align-items: center;
+    text-align: center;
+    vertical-align: middle;
+    color: #006442;
+}
+
+.match-row-container li a .item-col.logo-box {
+  flex-basis: 3%;
+}
+
+.match-row-container li a .item-col.logo-box img{
+  width: 100%;
+}
+
+.match-row-container li a .item-col.match-date {
+  flex-basis: 10%;
+    text-align: center;
+    font-weight: 700;
+    font-size: 15px;
+    color: #006442;
+}
+
+.match-subtitle {
+  display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+  .match-subtitle .match-status {
+    background-color: #006442;
+      font-weight: 600;
+      color: #fff;
+      padding: 10px;
+      border-radius: 10px;
+      position: relative;
+      z-index: 1;
+      font-size: 0.7em;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      min-width: 80px;
+  }
+
+  .match-subtitle .match-status:before {  
+    content: "";
+      position: absolute;
+      left: -10px;
+      top: -8px;
+      width: 50px;
+      height: 50px;
+      background-color: #006442;
+      border-radius: 50%;
+      z-index: -1;
+      letter-spacing: 1px;
+  }
+
+  .match-subtitle .title {
+    margin-left: 10px;
+      font-size: 0.75em;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+  }
+
+  .match-venue-box {
+    margin: 10px 0 0 30px;
+      line-height: 1.5;
+      color: #006442;
+  }
+  /*End row styles*/
+
+  /*Start loader buttons styles*/
+  .loader-container {
+    text-align: center;
+  }
+
+  .loader-container button {
+    font-weight: 700;
+      text-transform: uppercase;
+      transition: all .3s ease;
+      padding: 13px 42px;
+      font-size: 11px;
+      line-height: 1.5em;
+      border-radius: 2px;
+      background-color: #006442;
+      color: #fff;
+      box-shadow: none;
+      border: 0;
+      cursor: pointer;
+      margin-bottom: 40px;
+  }
+  /*End loader buttons styles*/
+
+  /*Start live row styles*/
+  .Live .match-venue-box,
+  .Live .item-col.verses,
+  .Live .item-col.match-date {
+    color: #f47320 !important;
+  }
+
+  .Live .match-subtitle .match-status,
+  .Live .match-subtitle .match-status:before {
+    background-color: #f47320;
+  }
+  /*End live row styles*/
+
+
+  /*Start token box styles*/
+  .token-box {
+    text-align: center;
+    margin-top: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .token-box input {
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    min-width: 280px;
+    outline: none;
+    margin-right: 10px;
+  }
+
+  .token-box input:focus, 
+  .token-box input:active {
+    outline: none;
+  }
+
+  .token-box button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #1b6442;
+    color: #fff;
+    font-size: 0.9em;
+    cursor: pointer;
+  }
+
+  .empty-container {
+    text-align: center;
+    height: 50%;
+    margin-top: 10%;
+    font-size: 1.5em;
+    color: #737373;
+  }
+
+  /*Start page loader styles*/
+  .page-loader-container {
+      min-width: 100%;
+      min-height: 100%;
+      position: absolute;
+      z-index: 3;
+      background: #ebebeb;
+      left: 0;
+      top: -70px;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+  }
+
+    .loader {
+      border: 16px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 16px solid #006442;
+      width: 120px;
+      height: 120px;
+      -webkit-animation: spin 2s linear infinite;  Safari 
+      animation: spin 2s linear infinite;
+       margin: 20%;
+    }
+
+     Safari 
+    @-webkit-keyframes spin {
+      0% { -webkit-transform: rotate(0deg); }
+      100% { -webkit-transform: rotate(360deg); }
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    /*End page loader styles*/
+
+    /*Media query for mobile*/
+    @media only screen and (max-width: 600px) {
+    
+      .box-container {
+        width: 100%;
+      }
+
+      .match-row-container li a {
+        padding: 25px 20px 20px 20px;
+      }
+
+      .match-row-container li a .item-col {
+        flex-basis: 40%;
+      }
+
+      .match-row-container li a .item-col.team-name-box {
+        flex-basis: 45%;
+      }
+
+      .match-row-container li a .item-col.logo-box {
+         flex-basis: 10%;
+      }
+
+      .match-row-container li a .item-col.verses {
+        flex-basis: 8%;
+      }
+
+      .match-row-container li a .item-col.match-date {
+        flex-basis: 15%;
+      }
+    }

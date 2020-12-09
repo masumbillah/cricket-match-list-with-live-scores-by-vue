@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!-- Here loaded links and meta tags -->
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="styles.css">
+	<title>Daily Cricket | Scores </title>
+
+</head>
+<body>
+  <!-- Start root element -->
+  <div id="app">
+  	
+  	<!-- Page loader container -->
+  	<div v-if="isPageLoader" class="page-loader-container"><div class="loader"></div></div>
+
+		<div class="token-box">
+			<div v-if="isValidAccToken">
+				<button v-on:click="resetToken"> Reset token </button>
+			</div>
+			<div v-if="!isValidAccToken">
+				<input type="text" v-model="accessToken" placeholder="Past your access token here.."> 
+				<button v-on:click="saveToken"> Save to local storage </button>
+			</div>
+		</div>
+
+  	 <!-- Start matches list container -->
+	  <div v-if="matches.length>0" class="box-container">
+
+	  	<!-- Start list container tab box -->
+	  	<div class="tab-box">
+		    <div class="tab-item active">Live &amp; upcoming</div>
+		    <div class="tab-item">Result</div>
+		</div>
+	  	
+	  	<ul class="match-row-container" >
+	  		<!-- Start match row -->
+		  	<li v-for="matchInfo in matches">
+			    <a href="#" :class="matchInfo.status_str">
+				    <div class="item-col">
+				    	<div class="match-subtitle"> 
+				    		<span class="match-status">{{getMatchStatus(matchInfo.status)}}</span>
+				    		<span class="title">{{ matchInfo.subtitle }} </span>
+				    	 </div>	
+				        <div class="match-venue-box">
+					        <div class="match-venue-info"> {{matchInfo.venue.name}}, {{matchInfo.venue.location}} </div>
+					        <div class="match-timing"> {{getMatchLocalTime(matchInfo.status_note, matchInfo.timestamp_start)}} </div>
+				        </div>
+				    </div>
+				    <div class="item-col team-name-box">
+				        <div class="team-name"> {{matchInfo.teama.name}} </div>
+				        <div class="live-score"> {{matchInfo.teama.scores_full}}</div>
+				    </div>
+				    <div class="item-col logo-box">
+				        <img :src="getTeamLogoUrl(matchInfo.teama.logo_url)" />
+				    </div>
+				    <div class="item-col verses"> VS </div>
+				    <div class="item-col logo-box">
+				    	<img :src="getTeamLogoUrl(matchInfo.teamb.logo_url)" />
+				    </div>
+				    <div class="item-col team-name-box">
+				        <div class="team-name"> {{matchInfo.teamb.name}} </div>
+				        <div class="live-score"> {{matchInfo.teamb.scores_full}}</div>
+				    </div>
+				    <div class="item-col match-date"> {{getDate(matchInfo.date_start)}} </div>
+				</a>    
+			</li>
+		  </ul>
+		<div class="loader-container"><button v-on:click="loadMore"> Load More+ </button></div>
+	  </div>
+	  <div v-else="" class="empty-container"> We didn't find any things here! Please, enter your valid	access token. </div>
+
+  </div>
+
+  <!-- Load vue cdn and axios packages -->
+  <script src="https://unpkg.com/vue@next"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  
+  <script>
+	const MatchesApp = {
+	  data(){
+	    return {
+	      accessToken: '',
+	      matches: [],
+	      isPageLoader: true,
+	      filterLimit: "10",
+	      isValidAccToken: !!localStorage.getItem("accessToken"),
+	      getTeamLogoUrl: function(logoUrl) {
+	      	return !!logoUrl? logoUrl: 'https://cricket.entitysport.com/assets/uploads/2020/07/team-120x120.png';
+	      },
+	      getDate: function(date){
+	      	let d = new Date(date || new Date()),
+	      		dateString = !!d && d.toDateString(),
+	      		dateStrArray = dateString.split(" "),
+	      		fullYear = !!dateStrArray && dateStrArray['3'],
+	      		shortYear = !!fullYear && fullYear.slice(2);
+	      		return `${dateStrArray[2]} ${dateStrArray[1]}, ${shortYear}`;
+	      },
+	      getMatchLocalTime: function(time, timestampStart) {
+	      	return !!time? time.slice(9): new Date(timestampStart).toLocaleTimeString()+' local time';
+	      },
+	      getMatchStatus: function(status) {
+	      	 return status === 3? 'Live': 'Upcoming';
+	      }
+	    }
+	  },
+	   methods: {
+	   	//Load more event
+	    loadMore() { 
+	  		let instance = this,
+	  			existsLimit = instance.filterLimit,
+	  			newLimit = !!existsLimit && existsLimit*1+10;
+
+	  		instance.filterLimit = newLimit.toString();
+	  		getMatches(instance);
+	    },
+	    saveToken() {
+	    	let instance = this;
+	    	!!instance.accessToken && localStorage.setItem("accessToken", instance.accessToken);
+	    	if(!!localStorage.getItem("accessToken")) getMatches(instance, instance.accessToken);
+	    	instance.accessToken = '';
+	    },
+	    resetToken() {
+	    	let instance = this;
+	    	localStorage.setItem("accessToken", '');
+	    	getMatches(instance);
+	    	instance.isValidAccToken = true;
+	    }
+	  },
+	  mounted() {
+	  	let instance = this;
+	       instance.$nextTick(()=> {
+				getMatches(instance);
+			    setInterval(() => {
+			    	getMatches(instance);
+			    }, 10000);
+            });
+
+	       setTimeout(()=>{ instance.isPageLoader = false }, 400)
+	  }
+	}
+
+	//Element loaded by vue mount
+	//It's using vue CDN
+	Vue.createApp(MatchesApp).mount('#app');
+
+	//Get matches list from API
+	//Create custom filters
+	const getMatches = (instance, token) =>{
+		let accessToken = token? token:localStorage.getItem("accessToken"),
+			start_date = formattedDate(new Date()),
+			end_date = '2025-01-1',
+			filters = `&date=${end_date}_${start_date}&paged=1&per_page=${instance.filterLimit}`,
+			liveUrl = `https://rest.entitysport.com/v2/matches?status=3${filters}&token=${accessToken}`,
+			upcomingUrl = `https://rest.entitysport.com/v2/matches?status=1${filters}&token=${accessToken}`;
+
+			//Request for api
+			getMatchesFromApi(instance, liveUrl, liveMatches=> {
+				getMatchesFromApi(instance, upcomingUrl, upcomingMatches=> {
+					instance.matches = [...liveMatches, ...upcomingMatches];
+				} );
+			});
+	};
+
+	//Get date form
+	const formattedDate = dateContext =>{
+		let d =dateContext? dateContext: new Date(), 
+			isoDateString = !!d && d.toISOString(),
+			dateWithoutTimezone = !!isoDateString && isoDateString.split("T")[0];
+			return dateWithoutTimezone;
+	};
+
+	//API common method
+	const getMatchesFromApi = (instance, url, cb)=>{
+			axios.get(url)
+			.then(res=> { 
+		  	let {items} = !!res.data && res.data.response;
+		  	!!cb && cb(items)
+		  		instance.isValidAccToken = true;
+		  }).catch(error => {
+		  		instance.isValidAccToken = false;
+		  		instance.matches = [];
+		  		console.log(error);
+		  });
+	};
+
+  </script>
+
+</body>
+</html>
