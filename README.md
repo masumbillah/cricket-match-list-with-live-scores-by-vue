@@ -18,7 +18,17 @@
  
  => If you want to more matches. So click on load more button.
 
-#Live testing
+
+
+Screen shot1: 
+https://github.com/masumbillah/cricket-match-list-with-live-scores-by-vue/blob/main/Screen%20Shot%202020-11-26%20at%202.48.23%20AM.png
+
+Screen shot2: 
+https://github.com/masumbillah/cricket-match-list-with-live-scores-by-vue/blob/main/Screen%20Shot%202020-11-26%20at%202.48.32%20AM.png
+
+
+
+#Live Demo
 
 https://msapp-themebins.000webhostapp.com/cricket-scores/
 
